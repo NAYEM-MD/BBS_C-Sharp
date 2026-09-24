@@ -1,27 +1,24 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Default.master.cs" Inherits="w2.BBS.Manager.Form.Common.Default" %>
-<%-- // (c) 2026 W2 Co.,Ltd. --%>
-
+<%@ Import Namespace="w2.BBS.Manager" %>
 <!DOCTYPE html>
 <html>
 <head runat="server">
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>掲示板管理</title>
-	<link rel="stylesheet" type="text/css" href="<%= ResolveUrl("~/styles/manager.css") %>" />
-	<asp:ContentPlaceHolder ID="head" runat="server">
-	</asp:ContentPlaceHolder>
+	<link rel="stylesheet" href="<%: ResolveUrl("~/css/style.css") %>" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>掲示板管理画面</title>
+	<asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
 	<form id="form1" runat="server">
-		<div class="nav">
-			<span class="brand">BBS 管理</span>
-			<asp:LinkButton ID="lbNavUserList" runat="server" CausesValidation="false" OnClick="lbNavUserList_OnClick">ユーザー一覧</asp:LinkButton>
-			<asp:LinkButton ID="lbNavPostList" runat="server" CausesValidation="false" OnClick="lbNavPostList_OnClick">投稿一覧</asp:LinkButton>
-			<asp:LinkButton ID="lbNavLogout" runat="server" CausesValidation="false" OnClick="lbNavLogout_OnClick">ログアウト</asp:LinkButton>
+		<div id="divMenu" runat="server">
+			<p>
+				<a href="<%: ResolveUrl(Constants.PAGE_USER_LIST) %>">ユーザー一覧</a>
+				<a href="<%: ResolveUrl(Constants.PAGE_POST_LIST) %>">投稿一覧</a>
+				<asp:LinkButton ID="lbLogout" runat="server" Text="ログアウト" OnClick="lbLogout_Click" />
+			</p>
+			<hr />
 		</div>
-		<div class="wrap">
-			<asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-			</asp:ContentPlaceHolder>
-		</div>
+		<asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
 	</form>
 </body>
 </html>

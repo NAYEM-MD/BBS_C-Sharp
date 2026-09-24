@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f4f6f8;
+  color: #222;
+  text-align: center;
+}
+
+#rootTemplate {
+  max-width: 800px;
+  margin: 24px auto;
+  padding: 24px;
+  background: #fff;
+}
+
+h1, h2 {
+  color: #003d7a;
+}
+
+a {
+  color: #003d7a;
+}
+
+button, input[type=submit] {
+  background: #003d7a;
+  color: #fff;
+  border: 0;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+input, textarea {
+  padding: 6px;
+  border: 1px solid #ccc;
+  display: block;
+  margin: 8px auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 auto;
+}
+
+th {
+  background: #003d7a;
+  color: #fff;
+  padding: 8px;
+  text-align: center;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}

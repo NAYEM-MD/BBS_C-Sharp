@@ -577,7 +577,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\engrm\\.nuget\\packages\\": {},
+    "C:\\Users\\NAYEM\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
@@ -586,14 +586,14 @@
       "projectUniqueName": "C:\\inetpub\\wwwroot\\Training.BBS\\Commons\\w2.SampleDomain\\w2.SampleDomain.csproj",
       "projectName": "w2.SampleDomain",
       "projectPath": "C:\\inetpub\\wwwroot\\Training.BBS\\Commons\\w2.SampleDomain\\w2.SampleDomain.csproj",
-      "packagesPath": "C:\\Users\\engrm\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\NAYEM\\.nuget\\packages\\",
       "outputPath": "C:\\inetpub\\wwwroot\\Training.BBS\\Commons\\w2.SampleDomain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\engrm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\NAYEM\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -655,7 +655,7 @@
             "version": "[5.11.10, )"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315\\RuntimeIdentifierGraph.json"
       }
     }
   }

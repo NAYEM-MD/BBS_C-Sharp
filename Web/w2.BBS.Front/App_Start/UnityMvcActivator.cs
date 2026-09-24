@@ -1,5 +1,3 @@
-// (c) 2026 W2 Co.,Ltd.
-
 using System.Linq;
 using System.Web.Mvc;
 
@@ -11,12 +9,12 @@ using Unity.AspNet.Mvc;
 namespace w2.BBS.Front
 {
 	/// <summary>
-	/// Unity と ASP.NET MVC の統合
+	/// Provides the bootstrapping for integrating Unity with ASP.NET MVC.
 	/// </summary>
 	public static class UnityMvcActivator
 	{
 		/// <summary>
-		/// アプリケーション開始時に Unity を統合
+		/// Integrates Unity when the application starts.
 		/// </summary>
 		public static void Start()
 		{
@@ -27,7 +25,7 @@ namespace w2.BBS.Front
 		}
 
 		/// <summary>
-		/// アプリケーション終了時に Unity コンテナを破棄
+		/// Disposes the Unity container when the application is shut down.
 		/// </summary>
 		public static void Shutdown()
 		{

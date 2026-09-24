@@ -1,0 +1,95 @@
+{% _layout 'layout.liquid' %}
+
+{% _area title %}投稿編集{% end_area %}
+
+{% _area head_resource %}
+{% end_area %}
+
+{% _area page_body %}
+  <vue-edit-post
+    :post-id="{{ PostId }}"
+    initial-title="{{ Title }}"
+    initial-body="{{ Body }}">
+  </vue-edit-post>
+{% end_area %}
+
+{% _area component %}
+<script type="text/x-template" id="vue-edit-post">
+  <div>
+    <h1>投稿編集</h1>
+    <p v-if="errorMessage" style="color:red">${ errorMessage }</p>
+
+    <div>
+      <label>タイトル</label>
+      <input type="text" v-model="title" />
+    </div>
+    <div>
+      <label>本文</label>
+      <textarea v-model="body"></textarea>
+    </div>
+    <div>
+      <button type="button" @click="savePost()">更新</button>
+      <a :href="'/forum/detail?id=' + postId">戻る</a>
+    </div>
+  </div>
+</script>
+{% end_area %}
+
+<script>
+  {% _javascript key: "onload" %}
+  g_vueManager.setComponent('vue-edit-post', {
+    template: '#vue-edit-post',
+    props: {
+      postId: {
+        type: Number,
+        required: true,
+      },
+      initialTitle: {
+        type: String,
+        default: '',
+      },
+      initialBody: {
+        type: String,
+        default: '',
+      },
+    },
+    data() {
+      return {
+        title: this.initialTitle,
+        body: this.initialBody,
+        errorMessage: null,
+      }
+    },
+    methods: {
+      savePost: function () {
+        this.errorMessage = null;
+
+        return fetch(window.apiRoot + '/forum/edit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            postId: this.postId,
+            title: this.title,
+            body: this.body,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.Success) {
+            location.href = data.RedirectUrl;
+          } else if (data.RedirectUrl) {
+            location.href = data.RedirectUrl;
+          } else {
+            this.errorMessage = data.Message;
+          }
+        })
+        .catch(() => {
+          this.errorMessage = 'エラーが発生しました。';
+        });
+      },
+    },
+  });
+  {% end_javascript %}
+</script>

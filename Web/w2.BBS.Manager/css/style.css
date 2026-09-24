@@ -1,0 +1,58 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f4f6f8;
+  color: #222;
+}
+
+#divMenu {
+  background: #003d7a;
+  padding: 12px 20px;
+}
+
+  #divMenu a, #divMenu a:visited {
+    color: #fff;
+    margin-right: 16px;
+    text-decoration: none;
+  }
+
+  #divMenu hr {
+    display: none;
+  }
+
+form {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 24px;
+  background: #fff;
+}
+
+h2 {
+  color: #003d7a;
+}
+
+a {
+  color: #003d7a;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  background: #003d7a;
+  color: #fff;
+  padding: 8px;
+  text-align: left;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+input {
+  padding: 6px;
+  border: 1px solid #ccc;
+}

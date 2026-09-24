@@ -1,46 +1,75 @@
-{% _layout 'layout.liquid' %}
+﻿{% _layout 'layout.liquid' %}
 
 {% _area title %}ログイン{% end_area %}
 
 {% _area head_resource %}
-<link rel="stylesheet" href="{{ RootUrl | append: '/styles/style.css' | hard_reload }}" />
 {% end_area %}
 
 {% _area page_body %}
-<div class="login-container">
-  <h1>ログイン</h1>
-
-  <div class="messages">
-    {% if InfoMessage != blank %}
-    <p>{{ InfoMessage }}</p>
-    {% endif %}
-
-    {% if ErrorMessage != blank %}
-    <p>{{ ErrorMessage }}</p>
-    {% endif %}
-  </div>
-
-  <form method="post" action="{{ RootUrl | append: '/auth/login' }}">
-    <div>
-      <label for="loginId">ログインID</label>
-      <input type="text" id="loginId" name="LoginId" value="{{ LoginId }}" />
-    </div>
-
-    <div>
-      <label for="password">パスワード</label>
-      <input type="password" id="password" name="Password" value="{{ Password }}" />
-    </div>
-
-    <div>
-      <button type="submit">ログイン</button>
-    </div>
-  </form>
-
-  <div class="footer-link">
-    <a href="{{ RootUrl | append: '/auth/register' }}">会員登録はこちら</a>
-  </div>
-</div>
+  <vue-login></vue-login>
 {% end_area %}
 
 {% _area component %}
+<script type="text/x-template" id="vue-login">
+  <div>
+    <h1>ログイン</h1>
+    <p v-if="errorMessage" style="color:red">${ errorMessage }</p>
+
+    <div>
+      <label>ログインID</label>
+      <input type="text" v-model="loginId" />
+    </div>
+    <div>
+      <label>パスワード</label>
+      <input type="password" v-model="password" />
+    </div>
+    <div>
+      <button type="button" @click="submitLogin()">ログイン</button>
+      &nbsp;&nbsp;
+      <a href="/register">会員登録</a>
+    </div>
+  </div>
+</script>
 {% end_area %}
+
+<script>
+  {% _javascript key: "onload" %}
+  g_vueManager.setComponent('vue-login', {
+    template: '#vue-login',
+    data() {
+      return {
+        loginId: '',
+        password: '',
+        errorMessage: null,
+      }
+    },
+    methods: {
+      submitLogin: function () {
+        this.errorMessage = null;
+
+        return fetch(window.apiRoot + '/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            loginId: this.loginId,
+            password: this.password,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.Success) {
+            location.href = data.RedirectUrl;
+          } else {
+            this.errorMessage = data.Message;
+          }
+        })
+        .catch(() => {
+          this.errorMessage = 'エラーが発生しました。';
+        });
+      },
+    },
+  });
+  {% end_javascript %}
+</script>
