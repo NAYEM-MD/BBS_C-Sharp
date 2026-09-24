@@ -1,46 +1,80 @@
-{% _layout 'layout.liquid' %}
+﻿{% _layout 'layout.liquid' %}
 
 {% _area title %}会員登録{% end_area %}
 
 {% _area head_resource %}
-<link rel="stylesheet" href="{{ RootUrl | append: '/styles/style.css' | hard_reload }}" />
 {% end_area %}
 
 {% _area page_body %}
-<div class="register-container">
-  <h1>会員登録</h1>
-
-  {% if ErrorMessage != blank %}
-  <div class="messages">
-    <p>{{ ErrorMessage }}</p>
-  </div>
-  {% endif %}
-
-  <form method="post" action="{{ RootUrl | append: '/auth/register' }}">
-    <div>
-      <label for="loginId">ログインID</label>
-      <input type="text" id="loginId" name="LoginId" value="{{ LoginId }}" />
-    </div>
-    <div>
-      <label for="userName">ユーザー名</label>
-      <input type="text" id="userName" name="UserName" value="{{ UserName }}" />
-    </div>
-
-    <div>
-      <label for="password">パスワード</label>
-      <input type="password" id="password" name="Password" value="{{ Password }}" />
-    </div>
-
-    <div>
-      <button type="submit">登録する</button>
-    </div>
-  </form>
-
-  <div class="footer-link">
-    <a href="{{ RootUrl | append: '/auth/login' }}">ログイン画面へ戻る</a>
-  </div>
-</div>
+  <vue-register></vue-register>
 {% end_area %}
 
 {% _area component %}
+<script type="text/x-template" id="vue-register">
+  <div>
+    <h1>会員登録</h1>
+    <p v-if="errorMessage" style="color:red">${ errorMessage }</p>
+
+    <div>
+      <label>ログインID</label>
+      <input type="text" v-model="loginId" />
+    </div>
+    <div>
+      <label>ユーザー名</label>
+      <input type="text" v-model="userName" />
+    </div>
+    <div>
+      <label>パスワード</label>
+      <input type="password" v-model="password" />
+    </div>
+    <div>
+      <button type="button" @click="submitRegister()">登録する</button>
+      <a href="/login">ログイン</a>
+    </div>
+  </div>
+</script>
 {% end_area %}
+
+<script>
+  {% _javascript key: "onload" %}
+  g_vueManager.setComponent('vue-register', {
+    template: '#vue-register',
+    data() {
+      return {
+        loginId: '',
+        password: '',
+        userName: '',
+        errorMessage: null,
+      }
+    },
+    methods: {
+      submitRegister: function () {
+        this.errorMessage = null;
+
+        return fetch(window.apiRoot + '/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            loginId: this.loginId,
+            password: this.password,
+            userName: this.userName,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.Success) {
+            location.href = data.RedirectUrl;
+          } else {
+            this.errorMessage = data.Message;
+          }
+        })
+        .catch(() => {
+          this.errorMessage = 'エラーが発生しました。';
+        });
+      },
+    },
+  });
+  {% end_javascript %}
+</script>

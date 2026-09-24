@@ -1,6 +1,4 @@
-// (c) 2026 W2 Co.,Ltd.
-
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace w2.BBS.Front
 {

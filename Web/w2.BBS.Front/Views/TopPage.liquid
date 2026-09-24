@@ -1,0 +1,101 @@
+{% _layout 'layout.liquid' %}
+
+{% _area title %}掲示板{% end_area %}
+
+{% _area head_resource %}
+{% end_area %}
+
+{% _area page_body %}
+<h1>掲示板</h1>
+<div>
+  <a href="/forum/post">新規投稿</a>
+  &nbsp;&nbsp;
+  <a href="/settings">設定</a>
+  &nbsp;&nbsp;
+  <a href="/login">ログアウト</a>
+</div>
+<vue-top-page></vue-top-page>
+{% end_area %}
+
+{% _area component %}
+<script type="text/x-template" id="vue-top-page">
+  <div>
+    <div v-if="posts.length > 0">
+      <div v-for="post in posts" :key="post.PostId">
+        <h2>
+          <a :href="'/forum/detail?id=' + post.PostId">${ post.Title }</a>
+        </h2>
+        <p>${ post.Body }</p>
+        <p>投稿者：${ post.Username }</p>
+      </div>
+
+      <div v-if="totalPages > 1">
+        <button
+          type="button"
+          :disabled="hasPrevious === false"
+          @click="movePage(page - 1)">
+          前へ
+        </button>
+
+        <span>${ page } / ${ totalPages }</span>
+
+        <button
+          type="button"
+          :disabled="hasNext === false"
+          @click="movePage(page + 1)">
+          次へ
+        </button>
+      </div>
+    </div>
+
+    <p v-else>投稿はありません。</p>
+  </div>
+</script>
+{% end_area %}
+
+<script>
+  {% _javascript key: "onload" %}
+  g_vueManager.setComponent('vue-top-page', {
+    template: '#vue-top-page',
+    data() {
+      return {
+        posts: [],
+        page: 1,
+        totalPages: 0,
+        hasPrevious: false,
+        hasNext: false,
+      }
+    },
+    mounted() {
+      this.getPosts();
+    },
+    methods: {
+      getPosts: function () {
+        return fetch(window.apiRoot + '/forum/get-posts?page=' + this.page)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+
+            return response.json();
+          })
+          .then(data => {
+            this.posts = data.Posts;
+            this.page = data.Page;
+            this.totalPages = data.TotalPages;
+            this.hasPrevious = data.HasPrevious;
+            this.hasNext = data.HasNext;
+          });
+      },
+      movePage: function (page) {
+        if ((page < 1) || (page > this.totalPages)) {
+          return;
+        }
+
+        this.page = page;
+        this.getPosts();
+      }
+    }
+  });
+  {% end_javascript %}
+</script>

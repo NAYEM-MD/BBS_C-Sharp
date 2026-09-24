@@ -1,0 +1,76 @@
+{% _layout 'layout.liquid' %}
+
+{% _area title %}新規投稿{% end_area %}
+
+{% _area head_resource %}
+{% end_area %}
+
+{% _area page_body %}
+  <vue-new-post></vue-new-post>
+{% end_area %}
+
+{% _area component %}
+<script type="text/x-template" id="vue-new-post">
+  <div>
+    <h1>新規投稿</h1>
+    <p v-if="errorMessage" style="color:red">${ errorMessage }</p>
+
+    <div>
+      <label>タイトル</label>
+      <input type="text" v-model="title" />
+    </div>
+    <div>
+      <label>本文</label>
+      <textarea v-model="body"></textarea>
+    </div>
+    <div>
+      <button type="button" @click="submitPost()">投稿</button>
+      <a href="/forum">戻る</a>
+    </div>
+  </div>
+</script>
+{% end_area %}
+
+<script>
+  {% _javascript key: "onload" %}
+  g_vueManager.setComponent('vue-new-post', {
+    template: '#vue-new-post',
+    data() {
+      return {
+        title: '',
+        body: '',
+        errorMessage: null,
+      }
+    },
+    methods: {
+      submitPost: function () {
+        this.errorMessage = null;
+
+        return fetch(window.apiRoot + '/forum/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            title: this.title,
+            body: this.body,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.Success) {
+            location.href = data.RedirectUrl;
+          } else if (data.RedirectUrl) {
+            location.href = data.RedirectUrl;
+          } else {
+            this.errorMessage = data.Message;
+          }
+        })
+        .catch(() => {
+          this.errorMessage = 'エラーが発生しました。';
+        });
+      },
+    },
+  });
+  {% end_javascript %}
+</script>

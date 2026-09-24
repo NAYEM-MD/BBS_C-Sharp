@@ -1,4 +1,4 @@
-﻿// (c) 2025 W2 Co.,Ltd.
+﻿// (c) 2026 W2 Co.,Ltd.
 
 // ルートVue管理
 class VueManager {

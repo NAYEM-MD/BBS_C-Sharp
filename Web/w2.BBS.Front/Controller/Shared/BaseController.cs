@@ -1,6 +1,4 @@
-// (c) 2026 W2 Co.,Ltd.
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Text;
 using System.Web.Mvc;
@@ -19,33 +17,6 @@ namespace w2.BBS.Front.Controller.Shared
 	/// </summary>
 	public abstract class BaseController : System.Web.Mvc.Controller
 	{
-		private const string CONTENT_TYPE_HTML = "text/html";
-		private const string CONTENT_TYPE_JSON = "application/json";
-
-		/// <summary>
-		/// セッションからログインユーザーIDを取得
-		/// </summary>
-		/// <returns>ログインユーザーID（未ログインなら null）</returns>
-		protected int? GetLoginUserId()
-		{
-			var loginUserId = this.Session[FrontSession.SESSION_KEY_LOGIN_USER_ID];
-			if (loginUserId is null)
-			{
-				return null;
-			}
-
-			return Convert.ToInt32(loginUserId);
-		}
-
-		/// <summary>
-		/// ログインセッションクリア
-		/// </summary>
-		protected void ClearLoginSession()
-		{
-			this.Session.Remove(FrontSession.SESSION_KEY_LOGIN_USER_ID);
-			this.Session.Remove(FrontSession.SESSION_KEY_LOGIN_USER_NAME);
-		}
-
 		/// <summary>
 		/// ViewをレンダリングしたActionResultを返す
 		/// </summary>
@@ -69,7 +40,7 @@ namespace w2.BBS.Front.Controller.Shared
 			{
 				Content = templateRenderer.RenderByFile(viewFileVirtualPath, model ?? new BaseViewModel(), optionData),
 				ContentEncoding = Encoding.UTF8,
-				ContentType = CONTENT_TYPE_HTML,
+				ContentType = "text/html",
 			};
 		}
 
@@ -81,7 +52,7 @@ namespace w2.BBS.Front.Controller.Shared
 		protected ActionResult JsonForJs(object obj)
 		{
 			var json = JsonConvert.SerializeObject(obj);
-			return base.Content(json, CONTENT_TYPE_JSON, Encoding.UTF8);
+			return Content(json, "application/json", Encoding.UTF8);
 		}
 	}
 }

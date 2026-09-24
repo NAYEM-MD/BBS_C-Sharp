@@ -1,0 +1,156 @@
+{% _layout 'layout.liquid' %}
+
+{% _area title %}投稿詳細{% end_area %}
+
+{% _area head_resource %}
+{% end_area %}
+
+{% _area page_body %}
+  <h1>{{ Title }}</h1>
+  <div>
+    <p>{{ Body }}</p>
+    <p>投稿者：{{ Username }}</p>
+  </div>
+
+  <h2>返信一覧</h2>
+  {% if Replies.size > 0 %}
+  <div>
+    {% for reply in Replies %}
+    <div>
+      <p>{{ reply.Body }}</p>
+      <p>返信者：{{ reply.Username }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if IsMine %}
+  <div>
+    <a href="/forum/edit?id={{ PostId }}">編集</a>
+    <vue-remove-post :post-id="{{ PostId }}"></vue-remove-post>
+  </div>
+  {% endif %}
+
+<h2>返信する</h2>
+<vue-add-reply :post-id="{{ PostId }}"></vue-add-reply>
+<p><a href="/forum">戻る</a></p>
+
+{% end_area %}
+
+{% _area component %}
+<script type="text/x-template" id="vue-remove-post">
+  <div>
+    <p v-if="errorMessage" style="color:red">${ errorMessage }</p>
+    <button type="button" @click="removePost()">削除</button>
+  </div>
+</script>
+
+<script type="text/x-template" id="vue-add-reply">
+  <div>
+    <p v-if="errorMessage" style="color:red">${ errorMessage }</p>
+    <div>
+      <textarea v-model="body"></textarea>
+    </div>
+    <div>
+      <button type="button" @click="submitReply()">返信する</button>
+    </div>
+  </div>
+</script>
+
+{% end_area %}
+
+<script>
+  {% _javascript key: "onload" %}
+  g_vueManager.setComponent('vue-remove-post', {
+    template: '#vue-remove-post',
+    props: {
+      postId: {
+        type: Number,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        errorMessage: null,
+      }
+    },
+    methods: {
+      removePost: function () {
+        if (confirm('削除しますか？') === false) {
+          return;
+        }
+
+        this.errorMessage = null;
+
+        return fetch(window.apiRoot + '/forum/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            postId: this.postId,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.Success) {
+            location.href = data.RedirectUrl;
+          } else if (data.RedirectUrl) {
+            location.href = data.RedirectUrl;
+          } else {
+            this.errorMessage = data.Message;
+          }
+        })
+        .catch(() => {
+          this.errorMessage = 'エラーが発生しました。';
+        });
+      },
+    },
+  });
+
+  g_vueManager.setComponent('vue-add-reply', {
+    template: '#vue-add-reply',
+    props: {
+      postId: {
+        type: Number,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        body: '',
+        errorMessage: null,
+      }
+    },
+    methods: {
+      submitReply: function () {
+        this.errorMessage = null;
+
+        return fetch(window.apiRoot + '/forum/reply', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            postId: this.postId,
+            body: this.body,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.Success) {
+            location.href = data.RedirectUrl;
+          } else if (data.RedirectUrl) {
+            location.href = data.RedirectUrl;
+          } else {
+            this.errorMessage = data.Message;
+          }
+        })
+        .catch(() => {
+          this.errorMessage = 'エラーが発生しました。';
+        });
+      },
+    },
+  });
+  {% end_javascript %}
+</script>
